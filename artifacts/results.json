@@ -123,8 +123,8 @@
       ]
     },
     "leakage_inflation_auroc": 0.003406170638137085,
-    "opera_paper_reported_auroc": 0.855,
-    "note": "Paper value is OPERA-GT on T7 as read from the published benchmark; confirm against the paper's table before citing. Our protocol may differ in clip length, pooling and aggregation."
+    "opera_paper_reported_auroc": null,
+    "note": "NOT COMPARABLE to the published T7 number, and no published value is quoted here because it was not read from the paper's table. Our protocol differs in clip selection, pooling, and split construction. Matching the paper's benchmark T7 definition is a prerequisite to any comparison. See docs/findings.md."
   },
   "experiment_C1": {
     "naive": {
