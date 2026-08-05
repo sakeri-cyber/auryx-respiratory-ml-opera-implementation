@@ -1,0 +1,182 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 1500" font-family="ui-sans-serif, -apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#64748b"/>
+    </marker>
+    <style>
+      .t{fill:#0f172a;font-size:14px}
+      .s{fill:#475569;font-size:12px}
+      .m{fill:#64748b;font-size:11px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+      .h{fill:#0f172a;font-size:17px;font-weight:700}
+      .lbl{fill:#94a3b8;font-size:11px;font-weight:600;letter-spacing:.09em}
+      .box{stroke-width:1.5;rx:8}
+      .ln{stroke:#64748b;stroke-width:1.6;fill:none;marker-end:url(#a)}
+      .note{fill:#b45309;font-size:11px;font-style:italic}
+    </style>
+  </defs>
+
+  <rect width="1180" height="1500" fill="#ffffff"/>
+  <text x="40" y="44" class="h" font-size="21">OPERA-GT on ICBHI — implemented architecture</text>
+  <text x="40" y="66" class="s">Grey = theirs (pretrained weights). Blue = mine (written from scratch). Amber = inferred, not verified against the paper.</text>
+
+  <!-- ============ STAGE 1 : AUDIO FRONT END ============ -->
+  <text x="40" y="108" class="lbl">STAGE 1 — AUDIO FRONT END  ·  src/respnet/data/audio.py  ·  MINE</text>
+  <rect x="34" y="120" width="1112" height="252" fill="#f8fafc" stroke="#cbd5e1" class="box"/>
+
+  <rect x="56" y="146" width="150" height="56" fill="#dbeafe" stroke="#3b82f6" class="box"/>
+  <text x="131" y="168" class="t" text-anchor="middle">.wav file</text>
+  <text x="131" y="186" class="m" text-anchor="middle">44.1k / 10k / 4k Hz</text>
+
+  <path d="M212 174 H252" class="ln"/>
+  <rect x="256" y="146" width="150" height="56" fill="#dbeafe" stroke="#3b82f6" class="box"/>
+  <text x="331" y="168" class="t" text-anchor="middle">resample_poly</text>
+  <text x="331" y="186" class="m" text-anchor="middle">→ 16 000 Hz mono</text>
+
+  <path d="M412 174 H452" class="ln"/>
+  <rect x="456" y="146" width="150" height="56" fill="#dbeafe" stroke="#3b82f6" class="box"/>
+  <text x="531" y="168" class="t" text-anchor="middle">centre clip</text>
+  <text x="531" y="186" class="m" text-anchor="middle">131 072 samples</text>
+
+  <path d="M612 174 H652" class="ln"/>
+  <rect x="656" y="146" width="150" height="56" fill="#dbeafe" stroke="#3b82f6" class="box"/>
+  <text x="731" y="168" class="t" text-anchor="middle">STFT</text>
+  <text x="731" y="186" class="m" text-anchor="middle">win 1024, hop 512</text>
+
+  <path d="M812 174 H852" class="ln"/>
+  <rect x="856" y="146" width="150" height="56" fill="#dbeafe" stroke="#3b82f6" class="box"/>
+  <text x="931" y="168" class="t" text-anchor="middle">power spectrum</text>
+  <text x="931" y="186" class="m" text-anchor="middle">(513, 256)</text>
+
+  <path d="M931 208 V236 H531" class="ln"/>
+  <rect x="356" y="240" width="180" height="56" fill="#dbeafe" stroke="#3b82f6" class="box"/>
+  <text x="446" y="262" class="t" text-anchor="middle">mel filterbank</text>
+  <text x="446" y="280" class="m" text-anchor="middle">64 triangles, hand-built</text>
+
+  <path d="M352 268 H312" class="ln"/>
+  <rect x="156" y="240" width="152" height="56" fill="#dbeafe" stroke="#3b82f6" class="box"/>
+  <text x="232" y="262" class="t" text-anchor="middle">log(x + 1e-6)</text>
+  <text x="232" y="280" class="m" text-anchor="middle">compress</text>
+
+  <path d="M232 300 V326" class="ln"/>
+  <rect x="120" y="330" width="224" height="30" fill="#bfdbfe" stroke="#2563eb" class="box"/>
+  <text x="232" y="350" class="t" text-anchor="middle">per-example standardise</text>
+
+  <path d="M348 345 H600" class="ln"/>
+  <rect x="604" y="326" width="220" height="38" fill="#1e40af" stroke="#1e3a8a" class="box"/>
+  <text x="714" y="350" class="t" text-anchor="middle" fill="#ffffff" font-weight="700">spectrogram (1, 64, 256)</text>
+
+  <text x="846" y="345" class="note">← 8.192 s. Shape derived from pos_embed</text>
+  <text x="846" y="360" class="note">   (64/4)×(256/4) = 1024 patches</text>
+
+  <!-- ============ STAGE 2 : ENCODER ============ -->
+  <text x="40" y="416" class="lbl">STAGE 2 — OPERA-GT ENCODER  ·  src/respnet/models/opera_gt.py  ·  MY CODE, THEIR WEIGHTS</text>
+  <rect x="34" y="428" width="1112" height="642" fill="#f8fafc" stroke="#cbd5e1" class="box"/>
+
+  <rect x="70" y="454" width="260" height="52" fill="#bfdbfe" stroke="#2563eb" class="box"/>
+  <text x="200" y="475" class="t" text-anchor="middle">PatchEmbed</text>
+  <text x="200" y="493" class="m" text-anchor="middle">Conv2d(1→384, k=4, s=4)</text>
+
+  <path d="M334 480 H384" class="ln"/>
+  <rect x="388" y="454" width="230" height="52" fill="#e2e8f0" stroke="#94a3b8" class="box"/>
+  <text x="503" y="475" class="t" text-anchor="middle">(B, 1024, 384)</text>
+  <text x="503" y="493" class="m" text-anchor="middle">grid 16 × 64, row-major</text>
+
+  <path d="M622 480 H672" class="ln"/>
+  <rect x="676" y="454" width="230" height="52" fill="#bfdbfe" stroke="#2563eb" class="box"/>
+  <text x="791" y="475" class="t" text-anchor="middle">prepend CLS token</text>
+  <text x="791" y="493" class="m" text-anchor="middle">(B, 1025, 384)</text>
+
+  <path d="M910 480 H960 V524 H791 V540" class="ln"/>
+  <rect x="676" y="544" width="230" height="46" fill="#bfdbfe" stroke="#2563eb" class="box"/>
+  <text x="791" y="572" class="t" text-anchor="middle">+ pos_embed (1,1025,384)</text>
+
+  <!-- transformer stack -->
+  <path d="M791 594 V618" class="ln"/>
+  <rect x="300" y="622" width="580" height="290" fill="#eff6ff" stroke="#3b82f6" stroke-dasharray="5 4" class="box"/>
+  <text x="590" y="646" class="t" text-anchor="middle" font-weight="700">12 × Transformer Block  (pre-norm)</text>
+
+  <rect x="330" y="662" width="520" height="106" fill="#ffffff" stroke="#93c5fd" class="box"/>
+  <text x="352" y="684" class="m">x = x + Attention(LayerNorm(x))</text>
+  <rect x="352" y="694" width="200" height="30" fill="#dbeafe" stroke="#60a5fa" class="box"/>
+  <text x="452" y="714" class="m" text-anchor="middle">qkv: Linear(384 → 1152)</text>
+  <path d="M556 709 H586" class="ln"/>
+  <rect x="590" y="694" width="240" height="30" fill="#dbeafe" stroke="#60a5fa" class="box"/>
+  <text x="710" y="714" class="m" text-anchor="middle">6 heads × 64 dim, fused SDPA</text>
+  <text x="352" y="746" class="m">proj: Linear(384 → 384)</text>
+
+  <rect x="330" y="782" width="520" height="106" fill="#ffffff" stroke="#93c5fd" class="box"/>
+  <text x="352" y="804" class="m">x = x + MLP(LayerNorm(x))</text>
+  <rect x="352" y="814" width="220" height="30" fill="#dbeafe" stroke="#60a5fa" class="box"/>
+  <text x="462" y="834" class="m" text-anchor="middle">fc1: Linear(384 → 1536)</text>
+  <path d="M576 829 H606" class="ln"/>
+  <rect x="610" y="814" width="220" height="30" fill="#dbeafe" stroke="#60a5fa" class="box"/>
+  <text x="720" y="834" class="m" text-anchor="middle">GELU → fc2: 1536 → 384</text>
+  <text x="352" y="866" class="m">MLP ratio 4</text>
+
+  <text x="900" y="700" class="note">6 heads inferred from</text>
+  <text x="900" y="715" class="note">ViT-Small convention —</text>
+  <text x="900" y="730" class="note">not stated in the paper</text>
+
+  <path d="M590 916 V940" class="ln"/>
+  <rect x="470" y="944" width="240" height="44" fill="#bfdbfe" stroke="#2563eb" class="box"/>
+  <text x="590" y="971" class="t" text-anchor="middle">LayerNorm (final)</text>
+
+  <path d="M590 992 V1016" class="ln"/>
+  <rect x="410" y="1020" width="360" height="34" fill="#1e40af" stroke="#1e3a8a" class="box"/>
+  <text x="590" y="1043" class="t" text-anchor="middle" fill="#ffffff" font-weight="700">mean-pool patch tokens → (B, 384)</text>
+
+  <text x="790" y="1035" class="note">CLS excluded — MAE has no</text>
+  <text x="790" y="1050" class="note">objective that trains it</text>
+
+  <!-- discarded decoder -->
+  <rect x="70" y="944" width="300" height="110" fill="#f1f5f9" stroke="#cbd5e1" stroke-dasharray="4 4" class="box"/>
+  <text x="220" y="968" class="s" text-anchor="middle" font-weight="700">DECODER — discarded</text>
+  <text x="220" y="990" class="m" text-anchor="middle">decoder_embed 384 → 256</text>
+  <text x="220" y="1008" class="m" text-anchor="middle">16 × Block(dim 256)</text>
+  <text x="220" y="1026" class="m" text-anchor="middle">decoder_pred 256 → 16</text>
+  <text x="220" y="1046" class="m" text-anchor="middle" fill="#94a3b8">13.1M params dropped at load</text>
+
+  <!-- ============ STAGE 3 : HEADS ============ -->
+  <text x="40" y="1114" class="lbl">STAGE 3 — EXPERIMENTS  ·  frozen features, cached to disk  ·  MINE</text>
+  <rect x="34" y="1126" width="1112" height="330" fill="#f8fafc" stroke="#cbd5e1" class="box"/>
+
+  <rect x="430" y="1148" width="320" height="40" fill="#1e40af" stroke="#1e3a8a" class="box"/>
+  <text x="590" y="1174" class="t" text-anchor="middle" fill="#ffffff" font-weight="700">features (920, 384) — cached .npy</text>
+
+  <path d="M590 1192 V1210 H180 V1234" class="ln"/>
+  <path d="M590 1192 V1210 H460 V1234" class="ln"/>
+  <path d="M590 1192 V1210 H740 V1234" class="ln"/>
+  <path d="M590 1192 V1210 H1010 V1234" class="ln"/>
+
+  <rect x="70" y="1238" width="220" height="112" fill="#dbeafe" stroke="#3b82f6" class="box"/>
+  <text x="180" y="1260" class="t" text-anchor="middle" font-weight="700">A · COPD probe</text>
+  <text x="180" y="1280" class="m" text-anchor="middle">LogisticRegression</text>
+  <text x="180" y="1298" class="m" text-anchor="middle">subject-wise, 8 splits</text>
+  <text x="180" y="1322" class="t" text-anchor="middle" font-weight="700">AUROC 0.874</text>
+  <text x="180" y="1340" class="m" text-anchor="middle">± 0.024</text>
+
+  <rect x="350" y="1238" width="220" height="112" fill="#fde68a" stroke="#d97706" class="box"/>
+  <text x="460" y="1260" class="t" text-anchor="middle" font-weight="700">C1 · device probe</text>
+  <text x="460" y="1280" class="m" text-anchor="middle">bandwidth-matched</text>
+  <text x="460" y="1298" class="m" text-anchor="middle">3 classes, chance .333</text>
+  <text x="460" y="1322" class="t" text-anchor="middle" font-weight="700">bal-acc 0.810</text>
+  <text x="460" y="1340" class="m" text-anchor="middle">lift 0.715 vs COPD 0.518</text>
+
+  <rect x="630" y="1238" width="220" height="112" fill="#dbeafe" stroke="#3b82f6" class="box"/>
+  <text x="740" y="1260" class="t" text-anchor="middle" font-weight="700">C2 · profile</text>
+  <text x="740" y="1280" class="m" text-anchor="middle">batch 1, CPU</text>
+  <text x="740" y="1298" class="m" text-anchor="middle">200 iters, warm-up cut</text>
+  <text x="740" y="1322" class="t" text-anchor="middle" font-weight="700">125.3 ms</text>
+  <text x="740" y="1340" class="m" text-anchor="middle">82.8 MB fp32</text>
+
+  <rect x="900" y="1238" width="220" height="112" fill="#dbeafe" stroke="#3b82f6" class="box"/>
+  <text x="1010" y="1260" class="t" text-anchor="middle" font-weight="700">C3 · CNN baseline</text>
+  <text x="1010" y="1280" class="m" text-anchor="middle">spectrograms, not features</text>
+  <text x="1010" y="1298" class="m" text-anchor="middle">60 530 params</text>
+  <text x="1010" y="1322" class="t" text-anchor="middle" font-weight="700">AUROC 0.969</text>
+  <text x="1010" y="1340" class="m" text-anchor="middle">358× smaller, wins</text>
+
+  <text x="70" y="1390" class="s" font-weight="700">Parameter accounting — the correctness check:</text>
+  <text x="70" y="1412" class="m">checkpoint total 34 814 096  −  decoder 13 119 248  =  encoder 21 694 848        paper states “21M”  →  exact match, strict load, zero missing keys</text>
+  <text x="70" y="1436" class="note">Not verified: input orientation (64×256 vs 128×128 both yield 1024 patches) · head count · their T7 clip/aggregation scheme</text>
+</svg>

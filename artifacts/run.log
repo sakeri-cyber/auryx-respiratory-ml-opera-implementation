@@ -1,0 +1,108 @@
+
+==============================================================================
+STAGE 0 — Dataset
+==============================================================================
+Loaded 126 patient diagnoses
+Indexed 920 recordings over 126 patients
+{
+  "n_recordings": 920,
+  "n_patients": 126,
+  "copd_recordings": 793,
+  "copd_patients": 64,
+  "by_device": {
+    "AKGC417L": 646,
+    "Litt3200": 60,
+    "LittC2SE": 87,
+    "Meditron": 127
+  },
+  "by_diagnosis": {
+    "Asthma": 1,
+    "Bronchiectasis": 7,
+    "Bronchiolitis": 6,
+    "COPD": 64,
+    "Healthy": 26,
+    "LRTI": 2,
+    "Pneumonia": 6,
+    "URTI": 14
+  },
+  "by_native_rate": {
+    "4000": 90,
+    "10000": 6,
+    "44100": 824
+  }
+}
+
+==============================================================================
+STAGE 1 — Spectrograms
+==============================================================================
+  200/920 spectrograms
+  400/920 spectrograms
+  600/920 spectrograms
+  800/920 spectrograms
+Built 920 spectrograms in 22.2s
+Spectrogram tensor: (920, 64, 256)
+
+==============================================================================
+STAGE 2 — OPERA-GT features
+==============================================================================
+Loaded OPERA-GT encoder: 21,694,848 parameters, feature dim 384
+Extracted (920, 384) features in 24.1s on mps
+Feature matrix: (920, 384)
+Sanity check: same-patient 0.9854 vs different-patient 0.9706 (separation +0.0148) -> PASS
+
+==============================================================================
+EXPERIMENT A — T7 COPD detection (reproduction)
+==============================================================================
+Subject-wise split: 715/205 recordings, 94/32 patients (test COPD rate 0.88)
+COPD | subject-wise split              AUROC 0.899±0.000  bal-acc 0.748±0.000  (chance 0.500, n=715/205)
+COPD | random split (leaky)            AUROC 0.903±0.000  bal-acc 0.739±0.000  (chance 0.500, n=690/230)
+COPD | shuffled control                AUROC 0.492±0.000  bal-acc 0.533±0.000  (chance 0.500, n=715/205)
+
+==============================================================================
+EXPERIMENT C1 — Nuisance probes (device / patient / chest location)
+==============================================================================
+device | naive                         4-class  bal-acc 0.777±0.000  (chance 0.250, n=690/230)
+chest_location | naive                 7-class  bal-acc 0.334±0.000  (chance 0.143, n=690/230)
+/opt/anaconda3/lib/python3.12/site-packages/sklearn/metrics/_classification.py:2399: UserWarning: y_pred contains classes not in y_true
+  warnings.warn("y_pred contains classes not in y_true")
+/opt/anaconda3/lib/python3.12/site-packages/sklearn/metrics/_classification.py:2399: UserWarning: y_pred contains classes not in y_true
+  warnings.warn("y_pred contains classes not in y_true")
+/opt/anaconda3/lib/python3.12/site-packages/sklearn/metrics/_classification.py:2399: UserWarning: y_pred contains classes not in y_true
+  warnings.warn("y_pred contains classes not in y_true")
+/opt/anaconda3/lib/python3.12/site-packages/sklearn/metrics/_classification.py:2399: UserWarning: y_pred contains classes not in y_true
+  warnings.warn("y_pred contains classes not in y_true")
+/opt/anaconda3/lib/python3.12/site-packages/sklearn/metrics/_classification.py:2399: UserWarning: y_pred contains classes not in y_true
+  warnings.warn("y_pred contains classes not in y_true")
+patient | naive                        126-class  bal-acc 0.361±0.000  (chance 0.008, n=690/230)
+device | shuffled control              4-class  bal-acc 0.264±0.000  (chance 0.250, n=690/230)
+
+==============================================================================
+EXPERIMENT C1b — Bandwidth-controlled device probe
+==============================================================================
+Bandwidth-matched subset: kept 824/920 recordings at 44100 Hz (devices: ['AKGC417L', 'LittC2SE', 'Meditron'])
+device | bandwidth-matched             3-class  bal-acc 0.806±0.000  (chance 0.333, n=618/206)
+Subject-wise split: 641/183 recordings, 81/28 patients (test COPD rate 0.86)
+COPD | bandwidth-matched               AUROC 0.888±0.000  bal-acc 0.758±0.000  (chance 0.500, n=641/183)
+
+==============================================================================
+EXPERIMENT C2 — Deployment profile
+==============================================================================
+fp32                         median= 125.27ms  p90= 134.88ms  IQR= 11.25ms  (n=200, bs=1, cpu)
+fp32                         params= 21,694,848  on disk=  82.80 MB
+Quantisation failed: Didn't find engine for operation quantized::linear_prepack NoQEngine
+Wrote profile report to /Users/rohansakeri/my-portfolio/auryx-respiratory-ml/artifacts/profile.json
+
+==============================================================================
+EXPERIMENT C3 — Supervised CNN baseline
+==============================================================================
+  epoch   5  loss 0.3264  test AUROC 0.967
+  epoch  10  loss 0.2380  test AUROC 0.936
+  epoch  15  loss 0.1292  test AUROC 0.952
+  epoch  20  loss 0.0697  test AUROC 0.960
+  epoch  25  loss 0.0442  test AUROC 0.956
+  epoch  30  loss 0.0434  test AUROC 0.951
+Baseline CNN (60,530 params) best AUROC 0.969 vs OPERA-GT probe 0.899
+
+==============================================================================
+Wrote /Users/rohansakeri/my-portfolio/auryx-respiratory-ml/artifacts/results.json
+==============================================================================

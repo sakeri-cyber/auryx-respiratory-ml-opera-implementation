@@ -1,0 +1,365 @@
+{
+  "config": {
+    "audio": {
+      "sample_rate": 16000,
+      "n_mels": 64,
+      "win_ms": 64.0,
+      "hop_ms": 32.0,
+      "f_min": 50.0,
+      "f_max": 8000.0,
+      "n_frames": 256
+    },
+    "device": "mps",
+    "test_fraction": 0.25,
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "clip_seconds": 8.192,
+    "encoder_params": 21694848
+  },
+  "dataset": {
+    "n_recordings": 920,
+    "n_patients": 126,
+    "copd_recordings": 793,
+    "copd_patients": 64,
+    "by_device": {
+      "AKGC417L": 646,
+      "Litt3200": 60,
+      "LittC2SE": 87,
+      "Meditron": 127
+    },
+    "by_diagnosis": {
+      "Asthma": 1,
+      "Bronchiectasis": 7,
+      "Bronchiolitis": 6,
+      "COPD": 64,
+      "Healthy": 26,
+      "LRTI": 2,
+      "Pneumonia": 6,
+      "URTI": 14
+    },
+    "by_native_rate": {
+      "4000": 90,
+      "10000": 6,
+      "44100": 824
+    }
+  },
+  "sanity_check": {
+    "same_patient_cosine": 0.9854231303930283,
+    "diff_patient_cosine": 0.9705874061584473,
+    "separation": 0.014835724234581016,
+    "passed": true
+  },
+  "experiment_A": {
+    "subject_wise": {
+      "name": "COPD | subject-wise split",
+      "n_classes": 2,
+      "n_train": 715,
+      "n_test": 205,
+      "auroc_mean": 0.8993333333333332,
+      "auroc_std": 0.0,
+      "balanced_acc_mean": 0.7483333333333333,
+      "balanced_acc_std": 0.0,
+      "majority_baseline": 0.5,
+      "per_seed_auroc": [
+        0.8993333333333332,
+        0.8993333333333332,
+        0.8993333333333332,
+        0.8993333333333332,
+        0.8993333333333332
+      ],
+      "per_seed_balanced_acc": [
+        0.7483333333333333,
+        0.7483333333333333,
+        0.7483333333333333,
+        0.7483333333333333,
+        0.7483333333333333
+      ]
+    },
+    "random_split": {
+      "name": "COPD | random split (leaky)",
+      "n_classes": 2,
+      "n_train": 690,
+      "n_test": 230,
+      "auroc_mean": 0.9027395039714703,
+      "auroc_std": 0.0,
+      "balanced_acc_mean": 0.7390176689901118,
+      "balanced_acc_std": 0.0,
+      "majority_baseline": 0.5,
+      "per_seed_auroc": [
+        0.9027395039714703,
+        0.9027395039714703,
+        0.9027395039714703,
+        0.9027395039714703,
+        0.9027395039714703
+      ],
+      "per_seed_balanced_acc": [
+        0.7390176689901118,
+        0.7390176689901118,
+        0.7390176689901118,
+        0.7390176689901118,
+        0.7390176689901118
+      ]
+    },
+    "shuffled_control": {
+      "name": "COPD | shuffled control",
+      "n_classes": 2,
+      "n_train": 715,
+      "n_test": 205,
+      "auroc_mean": 0.4915555555555555,
+      "auroc_std": 0.0,
+      "balanced_acc_mean": 0.5327777777777778,
+      "balanced_acc_std": 0.0,
+      "majority_baseline": 0.5,
+      "per_seed_auroc": [
+        0.4915555555555555
+      ],
+      "per_seed_balanced_acc": [
+        0.5327777777777778
+      ]
+    },
+    "leakage_inflation_auroc": 0.003406170638137085,
+    "opera_paper_reported_auroc": 0.855,
+    "note": "Paper value is OPERA-GT on T7 as read from the published benchmark; confirm against the paper's table before citing. Our protocol may differ in clip length, pooling and aggregation."
+  },
+  "experiment_C1": {
+    "naive": {
+      "device": {
+        "name": "device | naive",
+        "n_classes": 4,
+        "n_train": 690,
+        "n_test": 230,
+        "auroc_mean": NaN,
+        "auroc_std": NaN,
+        "balanced_acc_mean": 0.7773088410991636,
+        "balanced_acc_std": 0.0,
+        "majority_baseline": 0.25,
+        "per_seed_auroc": [],
+        "per_seed_balanced_acc": [
+          0.7773088410991636,
+          0.7773088410991636,
+          0.7773088410991636,
+          0.7773088410991636,
+          0.7773088410991636
+        ]
+      },
+      "chest_location": {
+        "name": "chest_location | naive",
+        "n_classes": 7,
+        "n_train": 690,
+        "n_test": 230,
+        "auroc_mean": NaN,
+        "auroc_std": NaN,
+        "balanced_acc_mean": 0.33402473308163844,
+        "balanced_acc_std": 0.0,
+        "majority_baseline": 0.14285714285714285,
+        "per_seed_auroc": [],
+        "per_seed_balanced_acc": [
+          0.33402473308163844,
+          0.33402473308163844,
+          0.33402473308163844,
+          0.33402473308163844,
+          0.33402473308163844
+        ]
+      },
+      "patient": {
+        "name": "patient | naive",
+        "n_classes": 126,
+        "n_train": 690,
+        "n_test": 230,
+        "auroc_mean": NaN,
+        "auroc_std": NaN,
+        "balanced_acc_mean": 0.3605831668331668,
+        "balanced_acc_std": 0.0,
+        "majority_baseline": 0.007936507936507936,
+        "per_seed_auroc": [],
+        "per_seed_balanced_acc": [
+          0.3605831668331668,
+          0.3605831668331668,
+          0.3605831668331668,
+          0.3605831668331668,
+          0.3605831668331668
+        ]
+      },
+      "shuffled_control": {
+        "name": "device | shuffled control",
+        "n_classes": 4,
+        "n_train": 690,
+        "n_test": 230,
+        "auroc_mean": NaN,
+        "auroc_std": NaN,
+        "balanced_acc_mean": 0.26355436081242534,
+        "balanced_acc_std": 0.0,
+        "majority_baseline": 0.25,
+        "per_seed_auroc": [],
+        "per_seed_balanced_acc": [
+          0.26355436081242534
+        ]
+      }
+    },
+    "bandwidth_controlled": {
+      "device": {
+        "name": "device | bandwidth-matched",
+        "n_classes": 3,
+        "n_train": 618,
+        "n_test": 206,
+        "auroc_mean": NaN,
+        "auroc_std": NaN,
+        "balanced_acc_mean": 0.8060301124452067,
+        "balanced_acc_std": 0.0,
+        "majority_baseline": 0.3333333333333333,
+        "per_seed_auroc": [],
+        "per_seed_balanced_acc": [
+          0.8060301124452067,
+          0.8060301124452067,
+          0.8060301124452067,
+          0.8060301124452067,
+          0.8060301124452067
+        ]
+      },
+      "devices_present": [
+        "AKGC417L",
+        "LittC2SE",
+        "Meditron"
+      ],
+      "n_recordings": 824,
+      "copd": {
+        "name": "COPD | bandwidth-matched",
+        "n_classes": 2,
+        "n_train": 641,
+        "n_test": 183,
+        "auroc_mean": 0.8883544303797468,
+        "auroc_std": 0.0,
+        "balanced_acc_mean": 0.7577215189873419,
+        "balanced_acc_std": 0.0,
+        "majority_baseline": 0.5,
+        "per_seed_auroc": [
+          0.8883544303797468,
+          0.8883544303797468,
+          0.8883544303797468,
+          0.8883544303797468,
+          0.8883544303797468
+        ],
+        "per_seed_balanced_acc": [
+          0.7577215189873419,
+          0.7577215189873419,
+          0.7577215189873419,
+          0.7577215189873419,
+          0.7577215189873419
+        ]
+      }
+    }
+  },
+  "experiment_C2": {
+    "host": {
+      "platform": "macOS-26.0.1-arm64-arm-64bit",
+      "processor": "arm",
+      "python": "3.12.2",
+      "torch": "2.8.0",
+      "torch_threads": 8
+    },
+    "input_shape": [
+      1,
+      1,
+      64,
+      256
+    ],
+    "latency": [
+      {
+        "label": "fp32",
+        "median_ms": 125.27164595667273,
+        "p90_ms": 134.88404091913253,
+        "iqr_ms": 11.253947712248191,
+        "min_ms": 105.98454088903964,
+        "n_iterations": 200,
+        "batch_size": 1,
+        "device": "cpu"
+      }
+    ],
+    "size": [
+      {
+        "label": "fp32",
+        "n_parameters": 21694848,
+        "disk_bytes": 86818815
+      }
+    ],
+    "quantisation_error": "Didn't find engine for operation quantized::linear_prepack NoQEngine"
+  },
+  "experiment_C3": {
+    "n_parameters": 60530,
+    "encoder_parameters": 21694848,
+    "final_test_auroc_mean_last5": 0.9505333333333332,
+    "best_test_auroc": 0.9688888888888888,
+    "history": {
+      "loss": [
+        0.6370872037394063,
+        0.5282054312579282,
+        0.4357512172702309,
+        0.40039274659190144,
+        0.32640624292246945,
+        0.3240477529022244,
+        0.3240947206537207,
+        0.2897607518242789,
+        0.2612189632612508,
+        0.23798360103493804,
+        0.19949289589495092,
+        0.17760499080161116,
+        0.14763175259520123,
+        0.14516247925641654,
+        0.1292467258610092,
+        0.10505045037846882,
+        0.09584139074895766,
+        0.06961913972155198,
+        0.08211362703696831,
+        0.06967331714980252,
+        0.0703542072091486,
+        0.07684371325519535,
+        0.06285236106885897,
+        0.049195784695081776,
+        0.044210756429425485,
+        0.04452900873510154,
+        0.04471456177167959,
+        0.03607252627819568,
+        0.05175606672997241,
+        0.04342807370882768
+      ],
+      "test_auroc": [
+        0.5942222222222222,
+        0.8271111111111111,
+        0.9362222222222223,
+        0.9313333333333333,
+        0.9673333333333333,
+        0.9324444444444445,
+        0.8408888888888889,
+        0.8597777777777778,
+        0.9273333333333333,
+        0.9355555555555557,
+        0.9482222222222222,
+        0.9597777777777777,
+        0.9433333333333332,
+        0.9408888888888888,
+        0.9515555555555555,
+        0.9420000000000002,
+        0.9688888888888888,
+        0.9580000000000001,
+        0.9135555555555557,
+        0.9604444444444444,
+        0.9548888888888888,
+        0.9526666666666667,
+        0.9357777777777777,
+        0.9562222222222222,
+        0.9562222222222222,
+        0.9484444444444444,
+        0.9484444444444444,
+        0.9517777777777777,
+        0.9526666666666667,
+        0.9513333333333331
+      ]
+    },
+    "opera_probe_auroc": 0.8993333333333332
+  }
+}

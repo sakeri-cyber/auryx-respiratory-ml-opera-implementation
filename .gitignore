@@ -1,0 +1,44 @@
+# --- Large / third-party artifacts (regenerate; do not commit) ---
+# OPERA pretrained checkpoints are the authors' weights (huggingface.co/evelyn0414/OPERA),
+# ~790 MB, not ours to redistribute. Download with the command in the README.
+artifacts/checkpoints/
+# Cached spectrogram tensor (58 MB) — rebuilt from the dataset by the pipeline.
+artifacts/spectrograms.pt
+# The ICBHI dataset itself is never committed.
+data/
+*.wav
+
+# --- Kept on purpose ---
+# artifacts/features_operaGT.npy (1.4 MB), results.json, robust_results.json,
+# profile.json and run.log ARE committed so the numbers are inspectable without a rerun.
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+build/
+dist/
+.venv/
+venv/
+
+# --- Node (presentation build) ---
+presentation/node_modules/
+package-lock.json
+
+# --- Render junk from slide export ---
+presentation/*.pdf
+presentation/slide-*.jpg
+presentation/*.jpg
+.profiling_tmp/
+
+# --- Recorded video of the talk (large; personal) ---
+*.mov
+*.mp4
+*.webm
+
+# --- OS ---
+.DS_Store

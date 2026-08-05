@@ -1,0 +1,15 @@
+# Core — runs the full pipeline (feature extraction, probes, baseline, profiling)
+torch>=2.2
+numpy>=1.26
+scipy>=1.11
+scikit-learn>=1.3
+
+# Dev — tests, lint, types
+pytest>=8.0
+ruff>=0.6
+mypy>=1.11
+
+# Notes:
+# - No torchaudio / torchvision / timm: the encoder and the audio front end are
+#   implemented from scratch (see docs/code-walkthrough.md for why).
+# - The OPERA-GT checkpoint is downloaded separately — see the README.
